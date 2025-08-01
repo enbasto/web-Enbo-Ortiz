@@ -1,0 +1,15 @@
+[
+  {
+    "id": "1",
+    "name": "Programa para poner marca de agua en imagenes",
+    "description": "A un solo click puedes poner marca de agua a tus imagenes, solo necesitas tener mcuhas imagenes y una marca.",
+    "version": "1.0.0",
+    "downloadUrl": "/programs/AMAF/AMAF.exe",
+    "category": "Utilidades",
+    "downloads": 1261,
+    "rating": 4.8,
+    "releaseDate": "2024-01-15",
+    "size": "25.5 MB",
+    "usageTutorial": "https://example.com/tutorials/password-generator"
+  }
+]
