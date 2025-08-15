@@ -69,6 +69,8 @@ export function YouTubeSection() {
                   src={video.thumbnail}
                   alt={video.title}
                   className="w-full h-48 object-cover"
+                  width={400}
+                  height={225}
                 />
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                   <Button
