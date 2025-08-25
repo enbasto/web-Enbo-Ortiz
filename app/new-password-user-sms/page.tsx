@@ -1,103 +1,87 @@
-"use client";
+"use client"
 
-import { useState, useEffect, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import axios from "@/services/axiosConfig.mmw";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { Suspense,useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
+import axios from "@/services/axiosConfig.sms";
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
 
-import Loading from "@/components/loader";
-import { useToast } from "@/hooks/use-toast";
+function NewPasswordUser() {
+  const searchParams = useSearchParams()
+  const parametro = searchParams.get('p')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null)
 
-function NewPasswordUserComponent() {
-  const searchParams = useSearchParams();
-  const parametro = searchParams.get("p");
-  const router = useRouter();
-  const { toast } = useToast();
 
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
 
   useEffect(() => {
     const validateToken = async () => {
       if (!parametro) {
-        setError("Falta un parámetro requerido");
-        setIsTokenValid(false);
-        return;
+        setError("Falta un parámetro requerido")
+        setIsTokenValid(false)
+        return
       }
 
       try {
-        const response = await axios.post("/api/auth/verifyResetToken", {
+        const response = await axios.post(`/api/users/verifyUserPassword`, {
           token: parametro,
-        });
+        })
+        console.log(response)
         if (response.data.status) {
-          setIsTokenValid(true);
+          setIsTokenValid(true)
         } else {
-          setError("El token no es válido o ha expirado");
-          setIsTokenValid(false);
+          setError("El token no es válido o ha expirado")
+          setIsTokenValid(false)
         }
       } catch (err) {
-        console.error(err);
-        setError("Error al validar el token");
-        setIsTokenValid(false);
+        console.error(err)
+        setError("Error al validar el token")
+        setIsTokenValid(false)
       }
-    };
+    }
 
-    validateToken();
-  }, [parametro]);
+    validateToken()
+  }, [parametro])
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (password !== confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Las contraseñas no coinciden.",
-        variant: "destructive",
-      });
+      setError("Las contraseñas no coinciden");
       return;
     }
-
+  
     try {
-      const response = await axios.post("/api/auth/resetPassword", {
+      const response = await axios.post(`/api/users/updatePassword`, {
         token: parametro,
         newPassword: password,
       });
-
+  
       if (response.data.status) {
-        toast({
-          title: "Éxito",
-          description: "Contraseña actualizada correctamente.",
-        });
-        router.push("/");
+        alert("Contraseña actualizada con éxito");
+        window.location.href = "/"; // Redirigir al inicio de sesión
       } else {
-        toast({
-          title: "Error",
-          description: response.data.message || "No se pudo actualizar la contraseña.",
-          variant: "destructive",
-        });
+        setError(response.data.error || "Error al actualizar la contraseña");
       }
     } catch (err) {
-      console.error("Error al actualizar la contraseña:", err);
-      toast({
-        title: "Error",
-        description: "Error en el servidor. Por favor, intenta más tarde.",
-        variant: "destructive",
-      });
+      console.error(err);
+      setError("Error al comunicarse con el servidor");
     }
   };
+  
 
   if (isTokenValid === null) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900">
-        <Loading />
+        <p className='text-white'>Validando token...</p>
       </div>
-    );
+    )
   }
 
   if (isTokenValid === false) {
@@ -110,7 +94,7 @@ function NewPasswordUserComponent() {
           </p>
           <Button
             onClick={() => {
-              router.push("/");
+              window.location.href = "/"
             }}
             className="bg-red-500 text-white w-full hover:bg-red-600"
           >
@@ -118,12 +102,12 @@ function NewPasswordUserComponent() {
           </Button>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900">
-      <div className="w-full bg-white max-w-md p-8 space-y-6 rounded-lg shadow-lg">
+      <div className="w-full max-w-md p-8 space-y-6 bg-gray-50 rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold text-center text-black">Crear Nueva Contraseña</h1>
         {error && <p className="text-red-600 text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -133,13 +117,13 @@ function NewPasswordUserComponent() {
               placeholder="Nueva contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pr-10 bg-white"
+              className="pr-10"
             />
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              className="absolute right-0 top-0 h-full bg-gray-500"
+              className="absolute right-0 top-0 h-full bg-accent/50"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
@@ -157,25 +141,25 @@ function NewPasswordUserComponent() {
               type="button"
               variant="ghost"
               size="icon"
-              className="absolute right-0 top-0 h-full bg-gray-500"
+              className="absolute right-0 top-0 h-full bg-accent/50"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
               {showConfirmPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
             </Button>
           </div>
-          <Button type="submit" className="w-full bg-green-500 text-white hover:bg-green-600">
+          <Button type="submit" className="w-full bg-green-500 text-btn_text_primary hover:bg-green-600">
             Cambiar Contraseña
           </Button>
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-export default function NewPasswordUser() {
+export default function NewPasswordUserPage(){
   return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><Loading /></div>}>
-      <NewPasswordUserComponent />
+    <Suspense >
+      <NewPasswordUser />
     </Suspense>
-  );
+  )
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import axios from "@/services/axiosConfig";
+import axios from "@/services/axiosConfig.mmw";
 import { AxiosError } from "axios";
 
 export default function VerifyAccountContent() {
