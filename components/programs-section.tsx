@@ -128,7 +128,7 @@ export function ProgramsSection() {
                           window.location.href = program.downloadUrl
                         })
                       } else if (program.mode === "online") {
-                        window.open(program.usageTutorial, "_blank")
+                        window.open(program.downloadUrl, "_blank")
                       }
                     }}
                   >
