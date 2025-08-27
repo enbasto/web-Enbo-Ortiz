@@ -10,6 +10,21 @@
     "rating": 4.8,
     "releaseDate": "2024-01-15",
     "size": "25.5 MB",
-    "usageTutorial": "https://example.com/tutorials/password-generator"
+    "usageTutorial": "https://example.com/tutorials/password-generator",
+    "mode": "download"
+  },
+  {
+    "id": "2",
+    "name": "Editor PDF Online",
+    "description": "Edita tus PDFs directamente desde el navegador, sin necesidad de descargar nada.",
+    "version": "1.0.0",
+    "downloadUrl": "https://pdf.enboortiz.com/",
+    "category": "Utilidades",
+    "downloads": 0,
+    "rating": 4.5,
+    "releaseDate": "2025-05-10",
+    "size": "—",
+    "usageTutorial": "https://example.com/tutorials/pdf-editor",
+    "mode": "online"
   }
 ]

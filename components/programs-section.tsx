@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Download, Star, Calendar, Tag } from "lucide-react"
+import { Download, Star, Calendar, Tag, PanelsTopLeft } from "lucide-react"
 
 interface Program {
   id: string
@@ -17,7 +17,8 @@ interface Program {
   rating: number
   releaseDate: string
   size: string
-  usageTutorial?: string 
+  usageTutorial?: string
+  mode?: "download" | "online"
 }
 
 export function ProgramsSection() {
@@ -120,21 +121,28 @@ export function ProgramsSection() {
                   </div>
 
                   <Button
-                    className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"
-                    onClick={async () => {
-                      await fetch(`/api/download/${program.id}`, { method: "POST" })
-
-                      const res = await fetch("/data/programs.json")
-                      const updated = await res.json()
-                      setPrograms(updated)
-
-                      window.location.href = program.downloadUrl
+                    className={`w-full ${program.mode === "download" ? "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white" : "bg-green-600 hover:bg-green-700 text-white"}`}
+                    onClick={() => {
+                      if (program.mode === "download") {
+                        fetch(`/api/download/${program.id}`, { method: "POST" }).then(() => {
+                          window.location.href = program.downloadUrl
+                        })
+                      } else if (program.mode === "online") {
+                        window.open(program.usageTutorial, "_blank")
+                      }
                     }}
-
                   >
-                    <Download className="mr-2 h-4 w-4" />
-                    Descargar
+                    {program.mode === "download" ? (
+                      <>
+                        <Download className="mr-2 h-4 w-4" /> Descargar
+                      </>
+                    ) : (
+                      <>
+                        <PanelsTopLeft className="mr-2 h-4 w-4" /> Usar en línea
+                      </>
+                    )}
                   </Button>
+
                   {program.usageTutorial && (
                     <Button
                       className="w-full mt-2 bg-blue-800 text-white hover:bg-blue-700"
